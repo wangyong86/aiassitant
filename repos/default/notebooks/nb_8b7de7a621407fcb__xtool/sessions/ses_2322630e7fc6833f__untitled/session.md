@@ -2,12 +2,12 @@
 id: "ses_2322630e7fc6833f"
 title: "需求与设计同步"
 createdAt: "2026-05-16T02:00:43.926Z"
-updatedAt: "2026-05-18T06:56:44.221Z"
+updatedAt: "2026-05-18T07:44:01.073Z"
 ---
 
 # 需求与设计同步
 
-<!-- message:id=xtool_history role=assistant createdAt=2026-05-18T06%3A56%3A44.221Z -->
+<!-- message:id=xtool_history role=assistant createdAt=2026-05-18T07%3A44%3A01.073Z -->
 
 ## Assistant
 
@@ -30,9 +30,10 @@ updatedAt: "2026-05-18T06:56:44.221Z"
 - 产品名改为 AIAssitant，并将 Codex CLI 访问抽象为内置 agent 插件，便于未来支持其它 agent CLI。
 - 增加删除 session 中某一轮对话的能力，用于精简上下文记录。
 - 支持二级子笔记本，明确问答存储在 session 的 session.md，并避免用户删除过的 Default notebook 被静默补回。
+- 将开发、部署、长期数据和运行时目录迁移到 Linux 系统用户 `wy` 的 home 下，后续服务以 `wy` 运行并由 `wy` 进行 git 提交。
 
 <!-- /message -->
-<!-- message:id=xtool_requirements role=assistant createdAt=2026-05-18T06%3A56%3A44.221Z -->
+<!-- message:id=xtool_requirements role=assistant createdAt=2026-05-18T07%3A44%3A01.073Z -->
 
 ## Assistant
 
@@ -89,13 +90,13 @@ Build `AIAssitant`, a private HTTPS web interface that behaves like a lightweigh
 - The service must require login before serving the app or APIs.
 - The login secret must be stored server-side only.
 - All state must be stored as ordinary files. Long-term content and runtime state must be separated.
-- Long-term content root: `/home/ec2-user/ai-server-data/repos/default`.
-- Runtime state root: `/home/ec2-user/ai-server-runtime`.
-- Source root: `/home/ec2-user/ai-server-src`.
-- Deploy root: `/home/ec2-user/ai-server-deploy`.
+- Long-term content root: `/home/wy/ai-server-data/repos/default`.
+- Runtime state root: `/home/wy/ai-server-runtime`.
+- Source root: `/home/wy/ai-server-src`.
+- Deploy root: `/home/wy/ai-server-deploy`.
 - Core startup may depend on only:
   - TLS certificate/key files.
-  - `/home/ec2-user/ai-server-runtime/auth.json`, or `WEB_PASSWORD` for first-time auth bootstrap.
+  - `/home/wy/ai-server-runtime/auth.json`, or `WEB_PASSWORD` for first-time auth bootstrap.
   - The application source files.
 - Notebook/session/message/run data corruption must not prevent startup.
 - Corrupt data must be preserved under a `corrupt/` directory or with a `.corrupt.<timestamp>` suffix.
@@ -105,9 +106,9 @@ Build `AIAssitant`, a private HTTPS web interface that behaves like a lightweigh
 - `danger-full-access` must not be available through the web UI/API.
 - The browser tab/bookmark icon should use a static asset served from `public/`.
 - Login failures must be rate-limited per source IP.
-- Security-relevant events must be recorded to file-based audit logs under `/home/ec2-user/ai-server-runtime/audit/`.
-- Deleting a notebook or session must preserve its files under `/home/ec2-user/ai-server-runtime/trash/`.
-- Permanent deletion must only apply to items already in `/home/ec2-user/ai-server-runtime/trash/`.
+- Security-relevant events must be recorded to file-based audit logs under `/home/wy/ai-server-runtime/audit/`.
+- Deleting a notebook or session must preserve its files under `/home/wy/ai-server-runtime/trash/`.
+- Permanent deletion must only apply to items already in `/home/wy/ai-server-runtime/trash/`.
 - Small screens must avoid horizontal overflow and keep core actions reachable.
 - Answer downloads must be scoped to an existing session message.
 - Generated-file downloads must be scoped to files detected as created or modified during a specific agent run.
@@ -118,9 +119,9 @@ Build `AIAssitant`, a private HTTPS web interface that behaves like a lightweigh
 - The Codex integration must remain an implementation detail of the built-in `codex` agent plugin. New agent CLIs should be added by creating additional plugins instead of hardcoding new CLI logic into the HTTP/API layer.
 - Deleting one conversation turn from a session should remove the selected user/assistant/error message group from `session.md` so future context is shorter. Run metadata and recorded artifacts may remain under runtime `runs/`.
 - Child notebooks are limited to one level: root notebook -> child notebook. Deeper nesting is rejected.
-- Session question/answer messages are stored in `session.md` under `/home/ec2-user/ai-server-data/repos/default/notebooks/<notebook>/.../sessions/<session>/session.md`; run metadata is stored separately under `/home/ec2-user/ai-server-runtime/runs/`.
+- Session question/answer messages are stored in `session.md` under `/home/wy/ai-server-data/repos/default/notebooks/<notebook>/.../sessions/<session>/session.md`; run metadata is stored separately under `/home/wy/ai-server-runtime/runs/`.
 - If the trash contains a deleted `Default notebook`, startup should not recreate another Default notebook merely because the root notebook list is empty.
-- Deploy updates must copy source code from `/home/ec2-user/ai-server-src` to `/home/ec2-user/ai-server-deploy` and restart the service from the deploy directory.
+- Deploy updates must copy source code from `/home/wy/ai-server-src` to `/home/wy/ai-server-deploy` and restart the service from the deploy directory.
 
 ## Conflict Policy
 
@@ -130,7 +131,7 @@ If a request conflicts with an existing requirement or design decision, ask for 
 
 
 <!-- /message -->
-<!-- message:id=xtool_design role=assistant createdAt=2026-05-18T06%3A56%3A44.221Z -->
+<!-- message:id=xtool_design role=assistant createdAt=2026-05-18T07%3A44%3A01.073Z -->
 
 ## Assistant
 
@@ -146,9 +147,9 @@ The app is a dependency-free Node.js HTTPS server plus a static single-page fron
 - `public/` contains the browser UI.
 - `public/favicon.svg` is an SVG favicon used by the browser tab/bookmark UI and the in-app brand mark. It is intentionally served without authentication because it contains no user data and lets the login page show the browser icon.
 - `agent-plugins/` contains built-in agent CLI adapters. The current built-in adapter is `codex`.
-- `/home/ec2-user/ai-server-data` contains long-term content intended for independent management and git sync.
-- `/home/ec2-user/ai-server-runtime` contains runtime state such as auth, settings, audit logs, uploads, trash, run metadata, and temporary output.
-- `/home/ec2-user/ai-server-src` is the source directory. `/home/ec2-user/ai-server-deploy` is the running deployment directory.
+- `/home/wy/ai-server-data` contains long-term content intended for independent management and git sync.
+- `/home/wy/ai-server-runtime` contains runtime state such as auth, settings, audit logs, uploads, trash, run metadata, and temporary output.
+- `/home/wy/ai-server-src` is the source directory. `/home/wy/ai-server-deploy` is the running deployment directory.
 - Agent requests are routed to the selected plugin. The current `codex` plugin executes `codex exec`.
 - Runs are asynchronous: message creation returns a run id, and the frontend polls for completion.
 - The frontend uses responsive CSS media queries for phone-size screens.
@@ -159,7 +160,7 @@ The app is a dependency-free Node.js HTTPS server plus a static single-page fron
 Storage is intentionally file-based and human-readable.
 
 `​``text
-/home/ec2-user/ai-server-data/
+/home/wy/ai-server-data/
   repos/
     default/
       repo.md
@@ -176,7 +177,7 @@ Storage is intentionally file-based and human-readable.
             <session-id>__<slug>/
               session.md
 
-/home/ec2-user/ai-server-runtime/
+/home/wy/ai-server-runtime/
   auth.json
   initial-password.txt
   audit/
@@ -205,7 +206,7 @@ The service distinguishes core config from recoverable business data.
 Core config:
 
 - TLS cert/key files.
-- Auth config in `/home/ec2-user/ai-server-runtime/auth.json`, unless bootstrapping from `WEB_PASSWORD`.
+- Auth config in `/home/wy/ai-server-runtime/auth.json`, unless bootstrapping from `WEB_PASSWORD`.
 
 Recoverable data:
 
@@ -225,14 +226,14 @@ If recoverable data is corrupt:
 
 ## Authentication
 
-Login uses a server-side password hash in `/home/ec2-user/ai-server-runtime/auth.json`.
+Login uses a server-side password hash in `/home/wy/ai-server-runtime/auth.json`.
 
 - Password hash uses Node `crypto.scryptSync`.
 - Login issues an `HttpOnly`, `Secure`, `SameSite=Strict` cookie.
 - All APIs require authentication.
 - The main app redirects unauthenticated users to `/login`.
 - Login failures are rate-limited per source IP in memory.
-- Audit logs are append-only JSONL files in `/home/ec2-user/ai-server-runtime/audit/YYYY-MM-DD.log`.
+- Audit logs are append-only JSONL files in `/home/wy/ai-server-runtime/audit/YYYY-MM-DD.log`.
 
 ## Audit Events
 
@@ -267,10 +268,10 @@ Audit logs intentionally avoid storing passwords and message content.
 
 Delete actions are soft deletes:
 
-- Deleting a notebook moves the whole notebook directory from the content repo to `/home/ec2-user/ai-server-runtime/trash/notebooks/`.
-- Deleting a session moves only that session directory from its notebook's `sessions/` directory to `/home/ec2-user/ai-server-runtime/trash/sessions/`.
+- Deleting a notebook moves the whole notebook directory from the content repo to `/home/wy/ai-server-runtime/trash/notebooks/`.
+- Deleting a session moves only that session directory from its notebook's `sessions/` directory to `/home/wy/ai-server-runtime/trash/sessions/`.
 - Each trash entry includes `trash.json` with deletion metadata and original path.
-- Permanent delete removes only directories already under `/home/ec2-user/ai-server-runtime/trash/`.
+- Permanent delete removes only directories already under `/home/wy/ai-server-runtime/trash/`.
 - There is no restore API yet.
 
 ## Agent Plugin Architecture
@@ -333,10 +334,10 @@ Session:
 Question/answer storage:
 
 - The conversation transcript for a session is `session.md`.
-- For a root notebook, the path is `/home/ec2-user/ai-server-data/repos/default/notebooks/<notebook-id>__<slug>/sessions/<session-id>__<slug>/session.md`.
-- For a child notebook, the path is `/home/ec2-user/ai-server-data/repos/default/notebooks/<parent-id>__<slug>/notebooks/<child-id>__<slug>/sessions/<session-id>__<slug>/session.md`.
+- For a root notebook, the path is `/home/wy/ai-server-data/repos/default/notebooks/<notebook-id>__<slug>/sessions/<session-id>__<slug>/session.md`.
+- For a child notebook, the path is `/home/wy/ai-server-data/repos/default/notebooks/<parent-id>__<slug>/notebooks/<child-id>__<slug>/sessions/<session-id>__<slug>/session.md`.
 - The Markdown file has YAML-style JSON-valued front matter followed by message blocks marked with HTML comments.
-- Run metadata and artifact references are stored separately in `/home/ec2-user/ai-server-runtime/runs/`.
+- Run metadata and artifact references are stored separately in `/home/wy/ai-server-runtime/runs/`.
 
 Child notebooks:
 
@@ -403,7 +404,7 @@ The server maintains a normal notebook named `XTool研发`.
 Uploads are independent from sessions.
 
 - Endpoint: `POST /api/uploads`
-- Storage: `/home/ec2-user/ai-server-runtime/uploads/<timestamp>__<batch-id>/`
+- Storage: `/home/wy/ai-server-runtime/uploads/<timestamp>__<batch-id>/`
 - Directory uploads preserve client relative paths when the browser provides them.
 - Uploaded files do not automatically become notebook notes, messages, agent prompt context, or run artifacts.
 
@@ -420,10 +421,10 @@ If implementation pressure conflicts with these documents, the documents win unt
 
 Source and deployment are separate.
 
-- Source: `/home/ec2-user/ai-server-src`
-- Deploy: `/home/ec2-user/ai-server-deploy`
-- Content data: `/home/ec2-user/ai-server-data`
-- Runtime data: `/home/ec2-user/ai-server-runtime`
+- Source: `/home/wy/ai-server-src`
+- Deploy: `/home/wy/ai-server-deploy`
+- Content data: `/home/wy/ai-server-data`
+- Runtime data: `/home/wy/ai-server-runtime`
 
 Deployment is performed by `scripts/deploy.sh`. It syncs source to deploy, excludes local data and certificates from source, stops the current listener on port 8443, and starts `node server.js` from the deploy directory with `AIASSITANT_DATA_DIR` and `AIASSITANT_RUNTIME_DIR` pointing to the separated data/runtime roots.
 
