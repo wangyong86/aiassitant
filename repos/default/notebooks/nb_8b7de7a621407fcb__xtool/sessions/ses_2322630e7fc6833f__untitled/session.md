@@ -3,8 +3,6 @@ id: "ses_2322630e7fc6833f"
 title: "需求与设计同步"
 createdAt: "2026-05-16T02:00:43.926Z"
 updatedAt: "2026-05-18T06:36:29.051Z"
-settings: {}
-runs: []
 ---
 
 # 需求与设计同步

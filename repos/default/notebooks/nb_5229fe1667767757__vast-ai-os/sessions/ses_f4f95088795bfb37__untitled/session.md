@@ -3,8 +3,6 @@ id: "ses_f4f95088795bfb37"
 title: "产品定位"
 createdAt: "2026-05-16T02:14:19.547Z"
 updatedAt: "2026-05-17T00:53:07.897Z"
-settings: {}
-runs: [{"id":"run_03218565d053b7e3","status":"succeeded","startedAt":"2026-05-16T02:16:33.374Z","finishedAt":"2026-05-16T02:18:05.152Z","userMessageId":"msg_cf0aaaddd674b791"}]
 ---
 
 # 产品定位

@@ -3,8 +3,6 @@ id: "ses_bbbec9da8cc00063"
 title: "Test1"
 createdAt: "2026-05-15T23:26:54.211Z"
 updatedAt: "2026-05-15T23:39:51.693Z"
-settings: {}
-runs: [{"id":"run_091400c5697cdd84","status":"succeeded","startedAt":"2026-05-15T23:39:46.225Z","finishedAt":"2026-05-15T23:39:51.693Z","userMessageId":"msg_39c0c31778207260"}]
 ---
 
 # Test1

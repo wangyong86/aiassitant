@@ -3,8 +3,6 @@ id: "ses_f6f2408cb04725a8"
 title: "session1"
 createdAt: "2026-05-15T23:14:51.461Z"
 updatedAt: "2026-05-15T23:22:58.984Z"
-settings: {}
-runs: []
 ---
 
 # session1

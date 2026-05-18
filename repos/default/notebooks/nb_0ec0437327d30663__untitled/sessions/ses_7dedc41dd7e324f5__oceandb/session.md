@@ -3,8 +3,6 @@ id: "ses_7dedc41dd7e324f5"
 title: "oceandb架构的主要演进，从系统架构师的视角看"
 createdAt: "2026-05-17T23:02:51.450Z"
 updatedAt: "2026-05-18T00:18:25.891Z"
-settings: {}
-runs: [{"id":"run_bc8b2221a8d8958c","status":"succeeded","startedAt":"2026-05-17T23:03:34.700Z","finishedAt":"2026-05-17T23:05:27.173Z","userMessageId":"msg_27ef96af5f5f24e0"},{"id":"run_8e20a549d2982853","status":"succeeded","startedAt":"2026-05-18T00:16:08.018Z","finishedAt":"2026-05-18T00:18:25.891Z","userMessageId":"msg_719c44c7f50af115"}]
 ---
 
 # oceandb架构的主要演进，从系统架构师的视角看

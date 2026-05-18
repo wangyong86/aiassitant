@@ -3,8 +3,6 @@ id: "ses_d811341a2e0ad901"
 title: "经验主义哲学，在哲学体系中的位置"
 createdAt: "2026-05-17T06:36:02.238Z"
 updatedAt: "2026-05-17T06:39:12.983Z"
-settings: {}
-runs: [{"id":"run_dd594e347733fcbf","status":"succeeded","startedAt":"2026-05-17T06:38:11.024Z","finishedAt":"2026-05-17T06:39:12.983Z","userMessageId":"msg_68b0875299b48931"}]
 ---
 
 # 经验主义哲学，在哲学体系中的位置

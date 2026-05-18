@@ -3,8 +3,6 @@ id: "ses_8869ed65d650a500"
 title: "Reply with exactly: web-codex-ok"
 createdAt: "2026-05-15T10:05:10.156Z"
 updatedAt: "2026-05-15T10:05:36.108Z"
-settings: {}
-runs: []
 ---
 
 # Reply with exactly: web-codex-ok
